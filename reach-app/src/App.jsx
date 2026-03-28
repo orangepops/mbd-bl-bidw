@@ -412,7 +412,7 @@ function ResultsScreen() {
         <p style={{fontSize:11,color:"var(--text-subtle)",textAlign:"center",marginTop:24,lineHeight:1.75,fontStyle:"italic",padding:"0 16px"}}>
           CONFIDENTIAL – INTERNAL USE ONLY. This is a prototype release utilising sample data; no personal identifiers or user responses are stored or retained. This site and its contents are not for publication or citation without prior authorisation.
         </p>
-        <p style={{fontSize:11,color:"var(--text-subtle)",textAlign:"center",marginTop:8,lineHeight:1.9,fontFamily:"'Courier New',monospace",letterSpacing:"0.04em"}}>
+        <p style={{fontSize:11,color:"var(--text-subtle)",textAlign:"center",marginTop:16,lineHeight:1.9,fontStyle:"italic"}}>
           REACH™ AI Leadership Diagnostic · v1.0-beta<br/>
           HUMAN Framework · SMU-XL / BCG BrightHouse<br/>
           © Kathleen Co (Singapore) · Last updated 26 March 2026<br/>
@@ -454,8 +454,8 @@ function ResultsScreen() {
             {isBES
               ? <><span style={{color:"var(--gold)",fontStyle:"italic"}}>REACH™</span> Governance Readiness Profile<br/>(Self-Assessment)</>
               : inst.code==="LR"
-                ? <><span style={{color:"var(--gold)",fontStyle:"italic"}}>REACH™</span> AI Leader Report (Self-Assessment)</>
-                : <><span style={{color:"var(--gold)",fontStyle:"italic"}}>REACH™</span> AI Leader Report (360° Observer)</>
+                ? <><span style={{color:"var(--gold)",fontStyle:"italic"}}>REACH™</span> AI Leader Report<br/>(Self-Assessment)</>
+                : <><span style={{color:"var(--gold)",fontStyle:"italic"}}>REACH™</span> AI Leader Report<br/>(360° Observer)</>
             }
           </h1>
           <div style={{fontSize:13,color:"var(--text-secondary)",marginTop:8,lineHeight:1.6}}>
@@ -620,7 +620,7 @@ function ResultsScreen() {
         <p style={{fontSize:11,color:"var(--text-subtle)",textAlign:"center",marginTop:24,lineHeight:1.75,fontStyle:"italic",padding:"0 16px"}}>
           CONFIDENTIAL – INTERNAL USE ONLY. This is a prototype release utilising sample data; no personal identifiers or user responses are stored or retained. This site and its contents are not for publication or citation without prior authorisation.
         </p>
-        <p style={{fontSize:11,color:"var(--text-subtle)",textAlign:"center",marginTop:8,lineHeight:1.9,fontFamily:"'Courier New',monospace",letterSpacing:"0.04em"}}>
+        <p style={{fontSize:11,color:"var(--text-subtle)",textAlign:"center",marginTop:16,lineHeight:1.9,fontStyle:"italic"}}>
           REACH™ AI Leadership Diagnostic · v1.0-beta<br/>
           HUMAN Framework · SMU-XL / BCG BrightHouse<br/>
           © Kathleen Co (Singapore) · Last updated 26 March 2026<br/>
@@ -806,7 +806,7 @@ function AggregateReportScreen({onBack}) {
         <p style={{fontSize:11,color:"var(--text-subtle)",textAlign:"center",marginTop:24,lineHeight:1.75,fontStyle:"italic",padding:"0 16px"}}>
           CONFIDENTIAL – INTERNAL USE ONLY. This is a prototype release utilising sample data; no personal identifiers or user responses are stored or retained. This site and its contents are not for publication or citation without prior authorisation.
         </p>
-        <p style={{fontSize:11,color:"var(--text-subtle)",textAlign:"center",marginTop:8,lineHeight:1.9,fontFamily:"'Courier New',monospace",letterSpacing:"0.04em"}}>
+        <p style={{fontSize:11,color:"var(--text-subtle)",textAlign:"center",marginTop:16,lineHeight:1.9,fontStyle:"italic"}}>
           REACH™ AI Leadership Diagnostic · v1.0-beta<br/>
           HUMAN Framework · SMU-XL / BCG BrightHouse<br/>
           © Kathleen Co (Singapore) · Last updated 26 March 2026<br/>
@@ -938,7 +938,10 @@ function FacEntryScreen() {
           <div className="obs-note-wrap">
             <div className="obs-note-label">Axis Observation Note — {ax} · {AXES[ax].name}</div>
             <textarea className="obs-textarea" value={obsNotes[ax]||""} onChange={e=>{if(e.target.value.length<=300)setObs(ax,e.target.value);}} placeholder="Optional axis-level observation for debrief preparation…" maxLength={300}/>
-            <div style={{fontSize:11,color:"var(--text-subtle)",marginTop:4,fontFamily:"'Courier New',monospace",textAlign:"right"}}>{(obsNotes[ax]||"").length} / 300</div>
+            <div className="evidence-char-row">
+              <span className="char-hint">{(obsNotes[ax]||"").length>0&&(obsNotes[ax]||"").length<50?"Minimum 50 characters for a useful observation":""}</span>
+              <span className={`char-count${(obsNotes[ax]||"").length===0?"":(obsNotes[ax]||"").length<50?" warn":" ok"}`}>{(obsNotes[ax]||"").length} / 300</span>
+            </div>
           </div>
           <div className="nav-row">
             <div>{facAxIdx>0&&<button className="btn-ghost teal" onClick={()=>setFacAxIdx(v=>v-1)}>← Back</button>}</div>
@@ -1118,7 +1121,7 @@ function FacResultsScreen() {
         <p style={{fontSize:11,color:"var(--text-subtle)",textAlign:"center",marginTop:24,lineHeight:1.75,fontStyle:"italic",padding:"0 16px"}}>
           CONFIDENTIAL – INTERNAL USE ONLY. This is a prototype release utilising sample data; no personal identifiers or user responses are stored or retained. This site and its contents are not for publication or citation without prior authorisation.
         </p>
-        <p style={{fontSize:11,color:"var(--text-subtle)",textAlign:"center",marginTop:8,lineHeight:1.9,fontFamily:"'Courier New',monospace",letterSpacing:"0.04em"}}>
+        <p style={{fontSize:11,color:"var(--text-subtle)",textAlign:"center",marginTop:16,lineHeight:1.9,fontStyle:"italic"}}>
           REACH™ AI Leadership Diagnostic · v1.0-beta<br/>
           HUMAN Framework · SMU-XL / BCG BrightHouse<br/>
           © Kathleen Co (Singapore) · Last updated 26 March 2026<br/>
@@ -1236,7 +1239,7 @@ function HomeScreen({onViewAggregate}) {
         <p className="disclaimer" style={{marginTop:48}}>
           CONFIDENTIAL – INTERNAL USE ONLY. This is a prototype release utilising sample data; no personal identifiers or user responses are stored or retained. This site and its contents are not for publication or citation without prior authorisation.
         </p>
-        <p style={{fontSize:11,color:"var(--text-subtle)",textAlign:"center",marginTop:12,lineHeight:1.8,fontFamily:"'Courier New',monospace",letterSpacing:"0.04em"}}>
+        <p style={{fontSize:11,color:"var(--text-subtle)",textAlign:"center",marginTop:16,lineHeight:1.8,fontStyle:"italic"}}>
           REACH™ AI Leadership Diagnostic · v1.0-beta<br/>
           HUMAN Framework · SMU-XL / BCG BrightHouse<br/>
           © Kathleen Co (Singapore) · Last updated 26 March 2026<br/>
