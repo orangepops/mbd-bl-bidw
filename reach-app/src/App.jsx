@@ -386,6 +386,7 @@ function ResultsScreen() {
   const {inst,session,scores,resp,setScreen,leaderName}=useContext(AppCtx);
   const isObs=inst.code==="360";
   const isBES=inst.format==="bes";
+  const isSample=session?.id==="REACH-SAMPLE-DEMO";
   React.useEffect(()=>{window.scrollTo({top:0,behavior:"instant"});},[]);
 
   const getBand=ax=>{
@@ -395,7 +396,7 @@ function ResultsScreen() {
   };
   const bandClass={"Early Stage":"b-early","Developing":"b-developing","Established":"b-established","Advanced":"b-advanced","Significant Gap":"b-gap","Development Needed":"b-devneeded","Approaching Ready":"b-approaching","Ready to Act":"b-ready"};
 
-  if(isObs){
+  if(isObs&&!isSample){
     return (
       <div className="app">
         <div className="header"><div className="header-brand" onClick={()=>setScreen("home")}><span className="header-logo">REACH™</span><span className="header-sub">{inst.subtitle}</span></div></div>
@@ -433,7 +434,6 @@ function ResultsScreen() {
   const axMax=isBES?32:30;
   const totalS=isBES?AXIS_ORDER.reduce((s,ax)=>s+(scores.raw[ax]||0),0):null;
   const totalBand=isBES?getTotalGovBand(totalS):null;
-  const isSample=session?.id==="REACH-SAMPLE-DEMO";
 
   return (
     <div className="app">
