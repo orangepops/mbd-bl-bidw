@@ -443,10 +443,10 @@ function ResultsScreen() {
           </div>
           <h1 style={{fontFamily:"var(--font-display)",fontSize:"clamp(26px,4vw,40px)",color:"var(--navy-900)",fontWeight:400,marginBottom:6}}>
             {isBES
-              ? <><span style={{color:"var(--gold)",fontStyle:"italic"}}>REACH™</span> Governance Readiness Profile</>
+              ? <><span style={{color:"var(--gold)",fontStyle:"italic"}}>REACH™</span> Governance Readiness Profile (Self-Assessment)</>
               : inst.code==="LR"
-                ? <><span style={{color:"var(--gold)",fontStyle:"italic"}}>REACH™</span> AI-Ready Leader Profile</>
-                : <><span style={{color:"var(--gold)",fontStyle:"italic"}}>REACH™</span> 360° Observer Report</>
+                ? <><span style={{color:"var(--gold)",fontStyle:"italic"}}>REACH™</span> AI Leader Report (Self-Assessment)</>
+                : <><span style={{color:"var(--gold)",fontStyle:"italic"}}>REACH™</span> AI Leader Report (360° Observer)</>
             }
           </h1>
           <div style={{fontSize:13,color:"var(--text-secondary)",marginTop:8,lineHeight:1.6}}>
@@ -580,7 +580,7 @@ function AggregateReportScreen({onBack}) {
             HUMAN Framework · Pillar H · Facilitator Report · Sample
           </div>
           <h1 style={{fontFamily:"var(--font-display)",fontSize:"clamp(26px,4vw,40px)",color:"var(--navy-900)",fontWeight:400,marginBottom:6}}>
-            <span style={{color:"var(--gold)",fontStyle:"italic"}}>REACH™</span> Governance Readiness — Team Profile
+            <span style={{color:"var(--gold)",fontStyle:"italic"}}>REACH™</span> Governance Readiness Profile (Leadership Team)
           </h1>
           <div style={{fontSize:13,color:"var(--text-muted)",marginTop:8}}>A structured view of collective governance readiness across the C-suite leadership team · <span style={{color:"#b8621a",fontWeight:600}}>For facilitator use only</span></div>
           <div style={{width:48,height:1,background:"linear-gradient(90deg,transparent,var(--gold),transparent)",margin:"12px auto 0"}}/>
@@ -944,7 +944,7 @@ function FacResultsScreen() {
             HUMAN Framework · Pillar H · Facilitator Report
           </div>
           <h1 style={{fontFamily:"var(--font-display)",fontSize:"clamp(26px,4vw,40px)",color:"var(--navy-900)",fontWeight:400,marginBottom:6}}>
-            <span style={{color:"var(--gold)",fontStyle:"italic"}}>REACH™</span> Governance Readiness — Verification Profile
+            <span style={{color:"var(--gold)",fontStyle:"italic"}}>REACH™</span> Governance Readiness Profile (Facilitator Validated)
           </h1>
           <div style={{fontSize:13,color:"var(--text-secondary)",marginTop:8,lineHeight:1.6}}>
             A comparative view of self-reported and verified governance conduct · Individual scores are not for distribution or performance evaluation · <span style={{color:"#b8621a",fontWeight:600}}>For facilitator use only</span>
