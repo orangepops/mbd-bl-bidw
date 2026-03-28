@@ -5,10 +5,19 @@ import { FLAG_TEXT, DIM_ANCHOR, DIMENSION_DESC } from "./data/interpretations.js
 import {
   MOCK_PROFILES,
   SAMPLE_D1_RESP, SAMPLE_D1_SCORES,
-  SAMPLE_D2_RESP, SAMPLE_D2_SCORES,
   SAMPLE_D3_RESP, SAMPLE_D3_SCORES,
   SAMPLE_FAC_VSCORES, SAMPLE_FAC_OBS,
 } from "./data/mockProfiles.js";
+
+// ── D2 sample responses — team average from 5 observers (per axis, averaged to nearest integer) ──
+const SAMPLE_D2_RESP = {
+  R1:3,R2:2,R3:3,R4:3,R5:3,R6:3,
+  E1:4,E2:3,E3:4,E4:3,E5:4,E6:3,
+  A1:4,A2:4,A3:3,A4:4,A5:3,A6:3,
+  C1:2,C2:2,C3:3,C4:3,C5:2,C6:3,
+  H1:4,H2:4,H3:3,H4:4,H5:4,H6:3,
+};
+const SAMPLE_D2_SCORES=(()=>{const raw={},pct={};AXIS_ORDER.forEach(a=>{const v=scoreLikert(SAMPLE_D2_RESP,I2.q,a);raw[a]=v;pct[a]=v!=null?toRadar(v,30):0;});return{raw,pct};})();
 import { AGG_PROFILES, AGG_COLORS, getTeamAvg, getAggBandClass, getAggBandLabel, getIndivStyle } from "./data/aggregateData.js";
 import { generateSessionId, scoreBES, scoreLikert, toRadar, getMaturityBand, getGovBand, getTotalGovBand } from "./scoring/scoring.js";
 
@@ -454,7 +463,7 @@ function ResultsScreen() {
               ? <>A structured view of your personal AI governance conduct against Singapore's regulatory expectations · <span style={{color:"#b8621a",fontWeight:600}}>For developmental use only</span></>
               : inst.code==="LR"
                 ? <>A reflective view of your own AI leadership readiness across five capabilities · <span style={{color:"#b8621a",fontWeight:600}}>For developmental use only</span></>
-                : <>A comparative view of AI leadership behaviours — how the leader sees themselves against how direct reports experience them · <span style={{color:"#b8621a",fontWeight:600}}>For facilitator use only</span></>
+                : <>A comparative view of how the leader sees themselves against how their team experiences them across five REACH capabilities · <span style={{color:"#b8621a",fontWeight:600}}>For facilitator use only</span></>
             }
           </div>
           <div style={{width:48,height:1,background:"linear-gradient(90deg,transparent,var(--gold),transparent)",margin:"12px auto 0"}}/>
@@ -476,15 +485,77 @@ function ResultsScreen() {
             </div>
           </div>
         )}
-        <div className="card" style={{textAlign:"center",marginBottom:24}}>
-          <div className="radar-wrapper"><RadarChart selfData={scores.pct} size={300}/></div>
-          {!isBES&&(
-            <div style={{marginTop:20,textAlign:"left"}}>
-              <div className="section-label" style={{marginBottom:12}}>Reading Your Profile</div>
-              <p style={{fontSize:14,color:"var(--text-secondary)",lineHeight:1.85,marginBottom:12}}><strong style={{color:"var(--navy-900)"}}>Shape</strong> indicates your developmental pattern. <strong style={{color:"var(--navy-900)"}}>Scale</strong> reflects your overall readiness level. <strong style={{color:"var(--navy-900)"}}>Asymmetries</strong> are the most diagnostic feature — notice where the shape is uneven before your debrief.</p>
+        {inst.code==="360"&&isSample ? (
+          <>
+            <div style={{background:"#fef6ee",border:"1px solid rgba(184,100,26,0.3)",borderRadius:"var(--radius-sm)",padding:"14px 18px",marginBottom:16}}>
+              <div style={{fontSize:11,letterSpacing:"0.14em",textTransform:"uppercase",color:"var(--amber)",marginBottom:10,fontWeight:500}}>Observer vs Self-Assessment Gap</div>
+              <div style={{display:"flex",gap:12,flexWrap:"wrap"}}>
+                {AXIS_ORDER.map(ax=>{
+                  const gap=SAMPLE_D2_SCORES.raw[ax]-SAMPLE_D1_SCORES.raw[ax];
+                  return (
+                    <span key={ax} style={{fontFamily:"'Courier New',monospace",fontSize:13,padding:"4px 10px",borderRadius:"var(--radius-sm)",background:Math.abs(gap)>=1?"rgba(184,100,26,0.12)":"rgba(0,0,0,0.04)",color:Math.abs(gap)>=1?"var(--amber)":"var(--text-secondary)",border:`1px solid ${Math.abs(gap)>=1?"rgba(184,100,26,0.35)":"#dde3eb"}`}}>
+                      {ax} {gap>0?"+":""}{gap}
+                    </span>
+                  );
+                })}
+              </div>
             </div>
-          )}
-        </div>
+            <div className="card" style={{textAlign:"center",marginBottom:24}}>
+              <div className="radar-wrapper"><RadarChart selfData={SAMPLE_D2_SCORES.pct} verifiedData={SAMPLE_D1_SCORES.pct} size={320}/></div>
+              <div className="radar-legend" style={{marginTop:16}}>
+                <div className="legend-item"><div className="legend-dot" style={{background:"#1a4d91"}}/> Observer Average (D2)</div>
+                <div className="legend-item"><div className="legend-dot" style={{background:"#c47a1e",width:20,height:3,borderRadius:0}}/> Self-Assessment (D1)</div>
+              </div>
+            </div>
+            <div className="card" style={{marginBottom:24}}>
+              <div className="section-label" style={{marginBottom:12}}>Observer vs Self-Assessment Gap</div>
+              <table className="gap-table">
+                <thead><tr><th>Axis</th><th>Self (D1)</th><th>Observer Avg (D2)</th><th>Gap</th><th>Direction</th></tr></thead>
+                <tbody>
+                  {AXIS_ORDER.map(ax=>{
+                    const d1=SAMPLE_D1_SCORES.raw[ax],d2=SAMPLE_D2_SCORES.raw[ax],gap=d2-d1;
+                    const chipClass=Math.abs(gap)>=1?"gap-flag":Math.abs(gap)>=0.5?"gap-warn":"gap-ok";
+                    const dir=gap>0?"Observer > Self":gap<0?"Self > Observer":"Aligned";
+                    return (
+                      <tr key={ax}>
+                        <td><strong style={{color:"var(--gold)"}}>{ax}</strong> <span style={{fontSize:11,color:"var(--text-subtle)"}}>{AXES[ax].name}</span></td>
+                        <td style={{fontFamily:"'Courier New',monospace",color:"var(--navy-800)",fontWeight:600}}>{d1}</td>
+                        <td style={{fontFamily:"'Courier New',monospace",color:"var(--navy-800)",fontWeight:600}}>{d2}</td>
+                        <td><span className={`fac-gap-chip ${chipClass}`}>{gap>0?"+":""}{gap}</span></td>
+                        <td style={{fontSize:12,color:"var(--text-secondary)"}}>{dir}</td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+            </div>
+            <div className="card" style={{marginBottom:24}}>
+              <div className="section-label" style={{marginBottom:16}}>Key Observations</div>
+              <div className="insight-block critical" style={{marginBottom:12}}>
+                <div className="insight-text"><strong>C — Primary Blind Spot.</strong> The leader rates their Cognitive Humility significantly above how observers experience it. This is the largest self-inflation gap in the profile and the most consequential for governance credibility.</div>
+              </div>
+              <div className="insight-block critical" style={{marginBottom:12}}>
+                <div className="insight-text"><strong>R — Secondary Blind Spot.</strong> Self-reported Reflective Sense-Making exceeds the observer average. The leader may perceive their reasoning transparency more positively than those who experience it directly.</div>
+              </div>
+              <div className="insight-block teal-ins" style={{marginBottom:12}}>
+                <div className="insight-text"><strong>A — Underestimated Strength.</strong> Observers rate the leader's Agility in Learning noticeably higher than the self-assessment. The leader may be discounting visible learning behaviours that their team clearly values.</div>
+              </div>
+              <div className="insight-block teal-ins">
+                <div className="insight-text"><strong>H — Underestimated Strength.</strong> Observer scores for Human-AI Relational Intelligence exceed the leader's own rating. Team-visible boundary-setting and oversight conduct are stronger than the leader gives themselves credit for.</div>
+              </div>
+            </div>
+          </>
+        ) : (
+          <div className="card" style={{textAlign:"center",marginBottom:24}}>
+            <div className="radar-wrapper"><RadarChart selfData={scores.pct} size={300}/></div>
+            {!isBES&&(
+              <div style={{marginTop:20,textAlign:"left"}}>
+                <div className="section-label" style={{marginBottom:12}}>Reading Your Profile</div>
+                <p style={{fontSize:14,color:"var(--text-secondary)",lineHeight:1.85,marginBottom:12}}><strong style={{color:"var(--navy-900)"}}>Shape</strong> indicates your developmental pattern. <strong style={{color:"var(--navy-900)"}}>Scale</strong> reflects your overall readiness level. <strong style={{color:"var(--navy-900)"}}>Asymmetries</strong> are the most diagnostic feature — notice where the shape is uneven before your debrief.</p>
+              </div>
+            )}
+          </div>
+        )}
         {isBES&&flaggedAxes.length>0&&(
           <div className="card" style={{borderColor:"rgba(192,57,43,0.3)",background:"rgba(192,57,43,0.03)",marginBottom:24}}>
             <div className="section-label" style={{color:"var(--red-flag)",marginBottom:12}}>Items Requiring Immediate Attention</div>
